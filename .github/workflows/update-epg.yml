@@ -15,14 +15,15 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Download EPG
+      - name: Download and extract EPG
         run: |
-          curl -fsSL http://epg.51zmt.top:8000/e.xml.gz -o e.xml.gz
+          curl -fsSL http://epg.51zmt.top:8000/e.xml.gz | gunzip > e.xml
+          rm -f e.xml.gz
 
       - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add e.xml.gz
-          git diff --cached --quiet || git commit -m "Update e.xml.gz"
+          git add -A
+          git diff --cached --quiet || git commit -m "Update e.xml"
           git push
